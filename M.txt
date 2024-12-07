@@ -1,0 +1,243 @@
+*******Q1.Using a dataset where "Experience" is the independent variable and "Salary" is the 
+dependent variable, perform the following tasks: Dataset link: 
+https://www.kaggle.com/datasets/ravitejakotharu/salary-datacsv  
+1. Build a linear regression model and train it on the training subset of the dataset.  
+2. Test the model on the testing subset of the dataset. 
+3. Plot scatter plots with regression lines for both the training and testing datasets.  
+4. Calculate the predicted values of "Salary" for the linear regression model. ************
+➔import pandas as pd 
+import matplotlib.pyplot as plt 
+from sklearn.model_selection import train_test_split 
+from sklearn.linear_model import LinearRegression 
+from sklearn.metrics import mean_squared_error 
+import seaborn as sns 
+data = pd.read_csv('salary_data.csv') 
+print(data.head()) 
+print("Dataset Summary:") 
+print(data.info()) 
+print(data.describe()) 
+data.hist(figsize=(10, 8)) 
+plt.show() 
+sns.boxplot(data=data, orient="h", palette="Set2") 
+plt.show() 
+X = data[['YearsExperience']] 
+y = data['Salary'] 
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42) 
+model = LinearRegression() 
+model.fit(X_train, y_train) 
+y_pred_test = model.predict(X_test) 
+y_pred_train = model.predict(X_train) 
+mse = mean_squared_error(y_test, y_pred_test) 
+print(f'Mean Squared Error: {mse:.2f}') 
+print("Predicted values for the testing set:") 
+print(y_pred_test) 
+plt.figure(figsize=(12, 6)) 
+plt.subplot(1, 2, 1) 
+plt.scatter(X_train, y_train, color='blue', label='Training data') 
+plt.plot(X_train, y_pred_train, color='red', linewidth=2, label='Regression line') 
+plt.title('Training Set') 
+plt.xlabel('Years of Experience') 
+plt.ylabel('Salary') 
+plt.legend() 
+plt.subplot(1, 2, 2) 
+plt.scatter(X_test, y_test, color='green', label='Testing data') 
+plt.plot(X_test, y_pred_test, color='red', linewidth=2, label='Regression line') 
+plt.title('Testing Set') 
+plt.xlabel('Years of Experience') 
+plt.ylabel('Salary') 
+plt.legend() 
+plt.show() 
+
+
+
+*********Q2. Using a dataset where "Position Levels" is the independent variable and "Salary" is 
+the dependent variable, perform the following tasks: Dataset link: 
+https://www.kaggle.com/datasets/mariospirito/position-salariescsv 
+1. Build a polynomial regression model (with an appropriate degree) and train it on the 
+training subset of the dataset.  
+2. Test the polynomial regression model on the testing subset of the dataset.  
+3. Plot scatter plots with polynomial regression curves for both the training and testing 
+datasets.  
+4. Calculate the predicted values of "Salary" for the polynomial regression model. **************
+➔import pandas as pd 
+import numpy as np 
+import matplotlib.pyplot as plt 
+from sklearn.model_selection import train_test_split 
+from sklearn.preprocessing import PolynomialFeatures 
+from sklearn.linear_model import LinearRegression 
+from sklearn.metrics import mean_squared_error 
+data = pd.read_csv('position_salaries.csv') 
+print(data.head()) 
+X = data[['Level']] 
+y = data['Salary'] 
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42) 
+poly_features = PolynomialFeatures(degree=4) 
+X_train_poly = poly_features.fit_transform(X_train) 
+X_test_poly = poly_features.transform(X_test) 
+model = LinearRegression() 
+model.fit(X_train_poly, y_train) 
+y_pred_test = model.predict(X_test_poly) 
+y_pred_train = model.predict(X_train_poly) 
+mse = mean_squared_error(y_test, y_pred_test) 
+print(f'Mean Squared Error: {mse:.2f}') 
+print("Predicted values for the testing set:") 
+print(y_pred_test) 
+plt.figure(figsize=(12, 6)) 
+plt.subplot(1, 2, 1) 
+plt.scatter(X_train, y_train, color='blue', label='Training data') 
+plt.plot(X_train, y_pred_train, color='red', linewidth=2, label='Polynomial Regression Curve') 
+plt.title('Training Set') 
+plt.xlabel('Position Level') 
+plt.ylabel('Salary') 
+plt.legend() 
+plt.subplot(1, 2, 2) 
+plt.scatter(X_test, y_test, color='green', label='Testing data') 
+plt.plot(X_test, y_pred_test, color='red', linewidth=2, label='Polynomial Regression Curve') 
+plt.title('Testing Set') 
+plt.xlabel('Position Level') 
+plt.ylabel('Salary') 
+plt.legend() 
+plt.show() 
+
+
+
+************Q3. Using a dataset, perform the following tasks: Dataset link: 
+https://www.kaggle.com/datasets/erscodingzone/user-datacsv  
+1. Build a logistic regression model and train it on the training subset of the dataset. 
+2. Test the logistic regression model on the testing subset of the dataset.  
+3. Plot a scatter plot of the data points and overlay the logistic regression decision 
+boundary for both the training and testing datasets. ************
+➔import pandas as pd 
+import numpy as np 
+import matplotlib.pyplot as plt 
+from sklearn.model_selection import train_test_split 
+from sklearn.linear_model import LogisticRegression 
+from sklearn.metrics import accuracy_score 
+data = pd.read_csv('User_Data.csv') 
+print(data.head()) 
+X = data[['Age', 'EstimatedSalary']] 
+y = data['Purchased'] 
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42) 
+model = LogisticRegression() 
+model.fit(X_train, y_train) 
+y_pred_test = model.predict(X_test) 
+accuracy = accuracy_score(y_test, y_pred_test) 
+print(f'Model Accuracy: {accuracy:.2f}') 
+plt.figure(figsize=(12, 6)) 
+plt.subplot(1, 2, 1) 
+plt.scatter(X_train['Age'], X_train['EstimatedSalary'], c=y_train, cmap='coolwarm', 
+edgecolors='k') 
+plt.xlabel('Age') 
+plt.ylabel('Estimated Salary') 
+plt.title('Training Set') 
+x_min, x_max = X_train['Age'].min() - 1, X_train['Age'].max() + 1 
+y_min, y_max = X_train['EstimatedSalary'].min() - 1, X_train['EstimatedSalary'].max() + 1 
+xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.1), np.arange(y_min, y_max, 0.1)) 
+Z = model.predict(np.c_[xx.ravel(), yy.ravel()]) 
+Z = Z.reshape(xx.shape) 
+plt.contourf(xx, yy, Z, alpha=0.2, cmap='coolwarm') 
+plt.subplot(1, 2, 2) 
+plt.scatter(X_test['Age'], X_test['EstimatedSalary'], c=y_test, cmap='coolwarm', 
+edgecolors='k') 
+plt.xlabel('Age') 
+plt.ylabel('Estimated Salary') 
+plt.title('Testing Set') 
+x_min, x_max = X_test['Age'].min() - 1, X_test['Age'].max() + 1 
+y_min, y_max = X_test['EstimatedSalary'].min() - 1, X_test['EstimatedSalary'].max() + 1 
+xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.1), np.arange(y_min, y_max, 0.1)) 
+Z = model.predict(np.c_[xx.ravel(), yy.ravel()]) 
+Z = Z.reshape(xx.shape) 
+plt.contourf(xx, yy, Z, alpha=0.2, cmap='coolwarm') 
+plt.show() 
+
+
+************AssQ1 = Decision Trees in Machine Learning Implement a decision tree classifier using the 
+Iris dataset. Dataset: Use the Iris dataset from Kaggle, which contains features such as 
+sepal length, sepal width, petal length, and petal width.  
+Dataset link: https://www.kaggle.com/datasets/uciml/iris 
+Q1. Data Exploration: Load the dataset (e.g., using Python and pandas). Perform 
+exploratory data analysis: - Summarize the dataset (number of entries, columns, and data 
+types). - Visualize feature distributions using histograms or boxplots. **************
+➔import pandas as pd 
+import seaborn as sns 
+import matplotlib.pyplot as plt 
+data = pd.read_csv('iris.csv') 
+print("Dataset Summary:") 
+print(data.info()) 
+print(data.describe()) 
+data.hist(figsize=(10, 8)) 
+plt.show() 
+sns.boxplot(data=data, orient="h", palette="Set2") 
+plt.show() 
+
+
+*************AssQ2 = Building a Decision Tree Model: - Split the dataset into 80% training and 20% 
+testing. - Train a decision tree classifier on the training data. - Evaluate accuracy - Visualize 
+the decision tree ***************
+➔import pandas as pd 
+from sklearn.model_selection import train_test_split 
+from sklearn.tree import DecisionTreeClassifier, plot_tree 
+from sklearn.metrics import accuracy_score 
+import matplotlib.pyplot as plt 
+df = pd.read_csv('iris.csv')   
+X = df.drop('Species', axis=1) 
+y = df['Species'] 
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42) 
+dt_model = DecisionTreeClassifier(random_state=42) 
+dt_model.fit(X_train, y_train) 
+y_pred = dt_model.predict(X_test) 
+accuracy = accuracy_score(y_test, y_pred) 
+print(f"Accuracy of the Decision Tree model: {accuracy * 100:.2f}%") 
+plt.figure(figsize=(10, 4)) 
+plot_tree(dt_model, filled=True) 
+plt.title("Decision Tree Classifier") 
+plt.show() 
+
+
+*******Ass3Q1 =Evaluating Model Accuracy with k-Fold Cross-Validation  
+1. Dataset: Use the Iris dataset.  
+2. Method: Apply 5-fold cross-validation. o Divide the dataset into 5 parts (folds). o For 
+each fold, use one part as the test set and the remaining parts as the training set.  
+3. Tasks: o Calculate the accuracy for each fold. o Calculate the mean accuracy across all 5 
+folds. 4. Output: Print the mean accuracy. **************
+➔import pandas as pd 
+from sklearn.model_selection import train_test_split 
+from sklearn.tree import DecisionTreeClassifier, plot_tree 
+from sklearn.metrics import accuracy_score 
+import matplotlib.pyplot as plt 
+df = pd.read_csv('iris.csv')   
+X = df.drop('Species', axis=1) 
+y = df['Species'] 
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42) 
+dt_model = DecisionTreeClassifier(random_state=42) 
+dt_model.fit(X_train, y_train) 
+y_pred = dt_model.predict(X_test) 
+accuracy = accuracy_score(y_test, y_pred) 
+print(f"Accuracy of the Decision Tree model: {accuracy * 100:.2f}%") 
+plt.figure(figsize=(10, 4)) 
+plot_tree(dt_model, filled=True) 
+plt.title("Decision Tree Classifier") 
+plt.show() 
+
+
+
+**********Ass4Q1 =Implementing the Bootstrap Aggregation (Bagging) Technique.  
+1. Dataset: Use the Iris dataset. 
+2. Method: Implement the Bootstrap Aggregation (Bagging) technique. Use a Decision 
+Tree Classifier as the base model.  
+3. Tasks: Apply the Bagging technique using the Decision Tree Classifier. Evaluate the 
+model's accuracy. *************
+➔from sklearn.ensemble import BaggingClassifier 
+from sklearn.tree import DecisionTreeClassifier 
+from sklearn.model_selection import cross_val_score 
+import numpy as np 
+from sklearn.datasets import load_iris 
+iris = load_iris() 
+X, y = iris.data, iris.target 
+base_model = DecisionTreeClassifier() 
+bagging_model = BaggingClassifier(estimator=base_model, n_estimators=50, 
+random_state=42) 
+bagging_scores = cross_val_score(bagging_model, X, y, cv=5, scoring='accuracy') 
+bagging_mean_accuracy = np.mean(bagging_scores) 
+print("Accuracy for each fold:", bagging_scores) 
+print("Mean accuracy across all folds:", bagging_mean_accuracy)
